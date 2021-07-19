@@ -4,7 +4,7 @@ import Modal from '../../../features/modals/Modal';
 
 function AddToCartModal(props) {
   return (
-    <Modal>
+    <Modal onClose={props.onClose}>
       <Segment.Group>
         <Segment piled>
           <Header>Confirmation!</Header>

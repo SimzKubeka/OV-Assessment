@@ -6,9 +6,24 @@ import {
   Image,
   Button,
   Icon,
+  Form,
+  Input,
 } from 'semantic-ui-react';
+import { gql, useMutation } from '@apollo/client';
+
+const ADD_NEW_USER = gql`
+  mutation createUser($name: String!) {
+    createUser(name: $name) {
+      id
+      name
+    }
+  }
+`;
 
 function HomePage({ history }) {
+  let input;
+  const [createUser] = useMutation(ADD_NEW_USER);
+
   return (
     <Segment inverted textAlign='center' vertical className='masthead'>
       <Container>
@@ -20,14 +35,40 @@ function HomePage({ history }) {
           />
           Sims-Shop 🚀
         </Header>
-        <Button
-          onClick={() => history.push('/clientside')}
-          size='huge'
-          inverted
+        <Form
+          vertical
+          onSubmit={(e) => {
+            e.preventDefault();
+            createUser({ variables: { name: input.value } });
+            input.value = '';
+          }}
         >
-          Start Shopping
-          <Icon name='right arrow' inverted />
-        </Button>
+          <div style={{ marginBottom: 5 }}>
+            <Input
+              placeholder='Enter Name'
+              inverted
+              ref={(node) => {
+                input = node;
+              }}
+            />
+          </div>
+          <div>
+            <Button
+              animated
+              as='button'
+              onClick={() => history.push('/clientside')}
+              size='large'
+              inverted
+              type='submit'
+              color='black'
+            >
+              <Button.Content visible>Start Shopping</Button.Content>
+              <Button.Content hidden>
+                <Icon inverted name='arrow right' />
+              </Button.Content>
+            </Button>
+          </div>
+        </Form>
       </Container>
     </Segment>
   );

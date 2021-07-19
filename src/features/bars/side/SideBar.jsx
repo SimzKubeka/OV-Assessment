@@ -1,27 +1,49 @@
-import React from 'react';
-import { Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
+import React, { Component } from 'react';
+import { Menu } from 'semantic-ui-react';
 
-const SideBar = () => (
-  <Sidebar.Pushable as={Segment}>
-    <Sidebar
-      as={Menu}
-      animation='overlay'
-      icon='labeled'
-      inverted
-      vertical
-      visible
-      width='wide'
-    >
-      <Menu.Item>
-        <Icon name='thumbtack' />
-        All Products
-      </Menu.Item>
-      <Menu.Item>
-        <Icon name='bullseye' />
-        My Orders
-      </Menu.Item>
-    </Sidebar>
-  </Sidebar.Pushable>
-);
+export default class SideBar extends Component {
+  state = { activeItem: 'all products' };
 
-export default SideBar;
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+
+  render() {
+    const { activeItem } = this.state;
+    const isClient = true;
+    if (isClient) {
+      return (
+        <Menu inverted pointing vertical>
+          <Menu.Item
+            name='all products'
+            active={activeItem === 'all products'}
+            onClick={this.handleItemClick}
+          />
+          <Menu.Item
+            name='my orders'
+            active={activeItem === 'my orders'}
+            onClick={this.handleItemClick}
+          />
+        </Menu>
+      );
+    } else {
+      return (
+        <Menu inverted pointing vertical>
+          <Menu.Item
+            name='my products'
+            active={activeItem === 'my products'}
+            onClick={this.handleItemClick}
+          />
+          <Menu.Item
+            name='add products'
+            active={activeItem === 'add products'}
+            onClick={this.handleItemClick}
+          />
+          <Menu.Item
+            name='orders'
+            active={activeItem === 'orders'}
+            onClick={this.handleItemClick}
+          />
+        </Menu>
+      );
+    }
+  }
+}
