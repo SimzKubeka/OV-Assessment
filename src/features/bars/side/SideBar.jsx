@@ -11,7 +11,7 @@ export default class SideBar extends Component {
     const isClient = true;
     if (isClient) {
       return (
-        <Menu inverted pointing vertical>
+        <Menu color='teal' inverted pointing vertical>
           <Menu.Item
             name='all products'
             active={activeItem === 'all products'}

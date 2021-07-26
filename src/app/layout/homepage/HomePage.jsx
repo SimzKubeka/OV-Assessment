@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Header,
@@ -13,7 +13,7 @@ import { gql, useMutation } from '@apollo/client';
 
 const ADD_NEW_USER = gql`
   mutation createUser($name: String!) {
-    createUser(name: $name) {
+    createUser(data: { name: $name }) {
       id
       name
     }
@@ -21,8 +21,8 @@ const ADD_NEW_USER = gql`
 `;
 
 function HomePage({ history }) {
-  let input;
   const [createUser] = useMutation(ADD_NEW_USER);
+  const [username, setUsername] = useState('');
 
   return (
     <Segment inverted textAlign='center' vertical className='masthead'>
@@ -39,16 +39,16 @@ function HomePage({ history }) {
           vertical
           onSubmit={(e) => {
             e.preventDefault();
-            createUser({ variables: { name: input.value } });
-            input.value = '';
+            createUser({ variables: { name: username } });
+            history.push('/clientside');
           }}
         >
           <div style={{ marginBottom: 5 }}>
             <Input
               placeholder='Enter Name'
               inverted
-              ref={(node) => {
-                input = node;
+              onChange={(e) => {
+                setUsername(e.target.value);
               }}
             />
           </div>
@@ -56,7 +56,6 @@ function HomePage({ history }) {
             <Button
               animated
               as='button'
-              onClick={() => history.push('/clientside')}
               size='large'
               inverted
               type='submit'

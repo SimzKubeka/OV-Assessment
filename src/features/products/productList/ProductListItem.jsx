@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { Button, Item, Segment } from 'semantic-ui-react';
+import AddToCartModal from '../../../app/layout/clientSide/AddToCartModal';
 
 const RETRIEVE_PRODUCTS = gql`
   query GetAllProducts {
@@ -14,6 +15,16 @@ const RETRIEVE_PRODUCTS = gql`
 `;
 
 function ProductListItem(props) {
+  const [modalShown, setModalShown] = useState(false);
+
+  const showModalHandler = () => {
+    setModalShown(true);
+  };
+
+  const hideModalHandler = () => {
+    setModalShown(false);
+  };
+
   const { loading, error, data } = useQuery(RETRIEVE_PRODUCTS);
 
   if (loading) return <p>Loading...</p>;
@@ -22,8 +33,9 @@ function ProductListItem(props) {
 
   return data.products.map(({ id, name, imageUrl, description }) => (
     <Segment.Group>
+      {modalShown && <AddToCartModal onClose={hideModalHandler} />}
       <Segment>
-        <Item.Group>
+        <Item.Group key={id}>
           <Item key={id}>
             <Item.Image size='tiny' src={imageUrl} alt='Product' />
             <Item.Content>
@@ -35,7 +47,7 @@ function ProductListItem(props) {
       </Segment>
       <Segment clearing>
         <Button
-          onClick={props.onAddClicked}
+          onClick={showModalHandler}
           color='teal'
           floated='right'
           content='Add'
